@@ -7,6 +7,7 @@
 #include "fm1_engine_control.h"
 #include "audio_output.h"
 #include "fm1_audio_io.h"
+#include "unit.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -359,6 +360,7 @@ EXPORT("sim_render") const float *sim_render(void)
         send(midi[midi_read].data, midi[midi_read].count); midi_read = (midi_read + 1) % MIDI_QUEUE;
     }
     (void)fm1_engine_render(previous, FM1_BLOCK_FRAMES);
+    unit_render_add(previous);
     fm1_output_mix(previous);
     frames += FM1_BLOCK_FRAMES; uint32_t next = (uint32_t)(frames * 1000U / 44100U);
     unsigned poll = now_ms / 10U != next / 10U; now_ms = next;
